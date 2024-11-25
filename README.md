@@ -1,5 +1,5 @@
 # Poker
-A app to play poker in TypeScript.
+An app to simulate poker games in TypeScript.
 
 ## To install:
 ```
