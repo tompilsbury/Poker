@@ -1,4 +1,4 @@
-import { Card, Rank, Suit} from "./app";
+import { Card, Rank, Suit} from "../app";
 
 type HandType = 'Royal Flush' | 'Straight Flush' | 'Four of a Kind' | 'Full House' |
                'Flush' | 'Straight' | 'Three of a Kind' | 'Two Pair' | 'One Pair' | 'High Card';

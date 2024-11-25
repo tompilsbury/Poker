@@ -1,4 +1,4 @@
-import { Card, removeRandomFromSet } from "./app";
+import { Card, removeRandomFromSet } from "../app";
 
 export class Round {
     public publicCards: Card[];

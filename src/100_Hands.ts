@@ -1,7 +1,7 @@
-import { Hand } from "./Hand";
+import { Hand } from "./Classes/Hand";
 import { randomHand } from "./app";
 
-const generateHandsAndTrack = (): Record<string, number> => {
+export const generateHandsAndTrack = (): Record<string, number> => {
     const handCounts: Record<string, number> = {
         'Royal Flush': 0,
         'Straight Flush': 0,
@@ -24,7 +24,3 @@ const generateHandsAndTrack = (): Record<string, number> => {
 
     return handCounts;
 };
-
-// Generate 100 hands and log the number of occurances.
-console.log(`Result from 100 random hands: `);
-console.log(generateHandsAndTrack());

@@ -1,6 +1,4 @@
-import { Hand } from "./Hand";
-import { Round } from "./Round";
-
+import { Hand } from "./Classes/Hand";
 export const suits: Suit[] = ['♥', '♦', '♠', '♣'];
 export const ranks: Rank[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
@@ -10,7 +8,7 @@ export type Rank = 'A' | '2' | '3'  | '4' | '5' | '6' | '7'
 export type Card = {suit: Suit, rank: Rank}
 
 
-const generateDeck = (): Set<Card> => {
+export const generateDeck = (): Set<Card> => {
     const deck = new Set<Card>();
     for (const suit of suits) {
         for (const rank of ranks) {
@@ -38,48 +36,18 @@ export const randomHand = (): Hand => {
     return new Hand(cards);
 };
 
-// Generate a random hand
-// const hand: Hand = randomHand();
+const runSimulation = async (args: string[]) => {
+    if (args.includes('-100')) {
+        const { generateHandsAndTrack } = await import('./100_Hands');
+        console.log(`Results from 100 random hands: `);
+        console.log(generateHandsAndTrack());
+    } else if (args.includes('-simulate_round')) {
+        const { simulateRound } = await import('./Simulate_Round');
+        simulateRound();
+    } else {
+        console.log('Invalid argument or no argument passed.');
+    }
+};
 
-
-// Create a specific hand
-//const cards: Card[] = [{ rank: '5', suit: '♦' }, { rank: '5', suit: '♣' }, { rank: 'A', suit: '♦' }, { rank: '6', suit: '♦' }, { rank: '4', suit: '♠' }, { rank: '6', suit: '♣' }, { rank: 'A', suit: '♥' }];
-//const hand: Hand = new Hand(cards)
-
-
-// Output the hand and type
-// console.log(hand.toString());
-// console.log(hand.getHandType())
-
-
-// Simulated Poker round. Betting functionality not yet implemented.
-const round: Round = new Round([]);
-const hand: Hand = new Hand([]);
-const deck =  generateDeck();
-
-// First round
-hand.setCard(0, removeRandomFromSet(deck));
-hand.setCard(1, removeRandomFromSet(deck));
-console.log(hand.getCards());
-console.log(hand.getHandType())
-
-// Second round
-round.generatePublicCards(deck);
-const publicCards = round.getPublicCards();
-for (var i = 0; i < publicCards.length; i++) {
-    hand.setCard(i+2, publicCards[i]);
-}
-console.log(hand.getCards());
-console.log(hand.getHandType())
-
-// Third round
-var newCard = round.addPublicCard(deck)
-hand.setCard(5, newCard);
-console.log(hand.getCards());
-console.log(hand.getHandType())
-
-// Final round
-var newCard = round.addPublicCard(deck)
-hand.setCard(6, newCard);
-console.log(hand.getCards());
-console.log(hand.getHandType())
+const args = process.argv.slice(2);
+runSimulation(args);
