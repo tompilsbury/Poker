@@ -1,64 +1,41 @@
 import { Hand } from "./Hand";
+import { Round } from "./Round";
 
 export const suits: Suit[] = ['♥', '♦', '♠', '♣'];
-export const values: Value[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+export const ranks: Rank[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
 export type Suit = '♥' | '♦' | '♠' | '♣';
-export type Value = 'A' | '2' | '3'  | '4' | '5' | '6' | '7'
+export type Rank = 'A' | '2' | '3'  | '4' | '5' | '6' | '7'
             | '8' | '9' | '10' | 'J' | 'Q' | 'K'
-export type Card = {suit: Suit, rank: Value}
+export type Card = {suit: Suit, rank: Rank}
 
 
 const generateDeck = (): Set<Card> => {
     const deck = new Set<Card>();
     for (const suit of suits) {
-        for (const rank of values) {
+        for (const rank of ranks) {
             deck.add({ suit, rank });
         }
     }
     return deck;
 };
 
-const randomHand = (): Hand => {
+export const removeRandomFromSet = (set: Set<Card>): Card => {
+    const items = Array.from(set);
+    const randomIndex = Math.floor(Math.random() * items.length);
+    const value = items[randomIndex];
+    set.delete(value);
+    return value; 
+};
+
+export const randomHand = (): Hand => {
     const deck = generateDeck();
-    const removeRandomFromSet = (set: Set<Card>): Card => {
-        const items = Array.from(set);
-        const randomIndex = Math.floor(Math.random() * items.length);
-        const value = items[randomIndex];
-        set.delete(value);
-        return value; 
-    };
-    
     const cards = [];
     for (let i = 0; i < 7; i++) {
         cards.push(removeRandomFromSet(deck));
     }
 
     return new Hand(cards);
-};
-
-const generateHandsAndTrack = (): Record<string, number> => {
-    const handCounts: Record<string, number> = {
-        'Royal Flush': 0,
-        'Straight Flush': 0,
-        'Four of a Kind': 0,
-        'Full House': 0,
-        'Flush': 0,
-        'Straight': 0,
-        'Three of a Kind': 0,
-        'Two Pair': 0,
-        'One Pair': 0,
-        'High Card': 0,
-    };
-
-    // Generate 100 random hands
-    for (let i = 0; i < 100; i++) {
-        const hand: Hand = randomHand();
-        const handType = hand.getHandType(); 
-        handCounts[handType]++;
-    }
-
-    return handCounts;
 };
 
 // Generate a random hand
@@ -75,6 +52,34 @@ const generateHandsAndTrack = (): Record<string, number> => {
 // console.log(hand.getHandType())
 
 
-// Generate 100 hands and log the number of occurances.
-console.log(`Result from 100 random hands: `);
-console.log(generateHandsAndTrack());
+// Simulated Poker round. Betting functionality not yet implemented.
+const round: Round = new Round([]);
+const hand: Hand = new Hand([]);
+const deck =  generateDeck();
+
+// First round
+hand.setCard(0, removeRandomFromSet(deck));
+hand.setCard(1, removeRandomFromSet(deck));
+console.log(hand.getCards());
+console.log(hand.getHandType())
+
+// Second round
+round.generatePublicCards(deck);
+const publicCards = round.getPublicCards();
+for (var i = 0; i < publicCards.length; i++) {
+    hand.setCard(i+2, publicCards[i]);
+}
+console.log(hand.getCards());
+console.log(hand.getHandType())
+
+// Third round
+var newCard = round.addPublicCard(deck)
+hand.setCard(5, newCard);
+console.log(hand.getCards());
+console.log(hand.getHandType())
+
+// Final round
+var newCard = round.addPublicCard(deck)
+hand.setCard(6, newCard);
+console.log(hand.getCards());
+console.log(hand.getHandType())
